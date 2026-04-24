@@ -1,0 +1,35 @@
+{
+  "name": "@skybluefeet/skills-kit",
+  "version": "0.2.0",
+  "description": "Project rules starter kit for Codex/Claude repositories",
+  "type": "module",
+  "bin": {
+    "project-rules-kit": "./src/cli.js"
+  },
+  "files": [
+    "src",
+    "templates",
+    "README.md",
+    "AGENTS.md",
+    "ONBOARDING.md",
+    "CLAUDE.md"
+  ],
+  "scripts": {
+    "start": "node ./src/cli.js",
+    "check": "node ./src/cli.js --help"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  },
+  "keywords": [
+    "codex",
+    "claude",
+    "agent",
+    "rules",
+    "templates"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@inquirer/prompts": "^7.5.0"
+  }
+}

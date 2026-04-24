@@ -1,0 +1,45 @@
+# 代码规范（跨语言总则）
+
+> 目标：统一代码风格、可维护性、可扩展性与可验证性；让程序员与 AI 在最小上下文下快速定位并安全修改代码。
+
+## 1. 适用范围
+
+- 本文档定义跨语言通用约束。
+- 各语言细则见：
+  - [RUST_CODE-STYLE.md](./CODE-STYLES/RUST_CODE-STYLE.md)
+  - [TYPESCRIPT_CODE-STYLE.md](./CODE-STYLES/TYPESCRIPT_CODE-STYLE.md)
+  - [JAVASCRIPT_CODE-STYLE.md](./CODE-STYLES/JAVASCRIPT_CODE-STYLE.md)
+  - [JAVA_CODE-STYLE.md](./CODE-STYLES/JAVA_CODE-STYLE.md)
+  - [PYTHON_CODE-STYLE.md](./CODE-STYLES/PYTHON_CODE-STYLE.md)
+  - [HTML_CODE-STYLE.md](./CODE-STYLES/HTML_CODE-STYLE.md)
+  - [CSS_CODE-STYLE.md](./CODE-STYLES/CSS_CODE-STYLE.md)
+
+## 2. 通用设计要求（强制）
+
+- 单一职责：模块、类、函数职责可用一句话说明。
+- 稳定接口：对外接口变更必须版本化或提供兼容迁移路径。
+- 明确边界：I/O、协议转换、业务规则、基础设施代码分层隔离。
+- 输入先校验：外部输入必须先校验，再进入核心逻辑。
+- 错误可追踪：错误信息必须包含可定位字段（参数名、路径、模块、阶段）。
+- 失败可复现：新增能力至少覆盖 1 条成功路径 + 1 条失败路径验证。
+
+## 3. 可读性与维护性（强制）
+
+- 命名必须体现语义，避免缩写堆叠。
+- 注释优先解释“功能与约束”，避免复述代码字面。
+- 长函数、深分支、重复逻辑必须拆分。
+- 示例目录不承载生产核心逻辑。
+
+## 4. 文档与留痕（强制）
+
+- 每次改动后在 `developers/SESSIONS/NOTE_YY_MM_DD.md` 追加记录。
+- 涉及跨语言接口变更时，必须同步更新：
+  - `README.md`
+  - 相关示例
+  - 对应语言规范或分析文档
+
+## 5. 质量门禁（建议基线）
+
+- 每种语言至少执行：格式化、静态检查、单测（如适用）。
+- 对高风险变更（接口、并发、序列化协议）补充回归验证。
+- 具体命令以各语言规范文档为准。

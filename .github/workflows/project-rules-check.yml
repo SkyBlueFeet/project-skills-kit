@@ -1,0 +1,30 @@
+name: Project Rules Check
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  rules-check:
+    name: Validate project-rules governance
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install @skybluefeet/skills-kit
+        run: npm install -g @skybluefeet/skills-kit
+
+      - name: Run doctor (fail on error)
+        run: project-rules-kit doctor --target=.
+
+      - name: Check sync drift
+        run: project-rules-kit sync --check --target=.

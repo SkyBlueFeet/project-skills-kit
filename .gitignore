@@ -1,0 +1,12 @@
+.npmrc
+.env
+.env.*
+node_modules/
+coverage/
+dist/
+*.log
+*.tmp
+*.bak
+.DS_Store
+repomix-output.xml
+developers/SESSIONS/
