@@ -1,22 +1,31 @@
 {
   "name": "@skybluefeet/skills-kit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Project rules starter kit for Codex/Claude repositories",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SkyBlueFeet/project-skills-kit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SkyBlueFeet/project-skills-kit/issues"
+  },
+  "homepage": "https://github.com/SkyBlueFeet/project-skills-kit#readme",
   "bin": {
-    "project-rules-kit": "./src/cli.js"
+    "skills-kit": "./src/cli.js"
   },
   "files": [
     "src",
     "templates",
-    "README.md",
-    "AGENTS.md",
-    "ONBOARDING.md",
-    "CLAUDE.md"
+    "README.md"
   ],
   "scripts": {
     "start": "node ./src/cli.js",
-    "check": "node ./src/cli.js --help"
+    "check": "npm run check:syntax && npm run check:cli",
+    "check:syntax": "node --check ./src/cli.js",
+    "check:cli": "node ./src/cli.js --help",
+    "pack:check": "npm pack --dry-run --cache ./.npm-cache",
+    "prepublishOnly": "npm run check && npm run pack:check"
   },
   "engines": {
     "node": ">=18.17.0"
@@ -28,6 +37,9 @@
     "rules",
     "templates"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "dependencies": {
     "@inquirer/prompts": "^7.5.0"

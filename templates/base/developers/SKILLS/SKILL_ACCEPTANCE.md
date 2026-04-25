@@ -20,8 +20,9 @@
 2. 按技术栈路由到对应专项验收文档（见下表）
 3. 逐条核对目标，填写验收结论
 4. 输出"验收通过 / 部分通过 / 不通过"判定
-5. 将验收结论追加到 developers/SESSIONS/NOTE_YY_MM_DD.md
-6. 如通过，同步更新三处计划索引状态为"已验收"
+5. 将验收结论写入对应计划文档的验收结论区块
+6. 如通过，仅更新 `AGENTS.md` 中对应计划索引的验收状态为"已验收"
+7. 在 `developers/SESSIONS/NOTE_YY_MM_DD.md` 追加会话留痕，记录本次验收动作与结果摘要
 ```
 
 ---
@@ -32,16 +33,18 @@
 |---|---|
 | Node.js 后端（Express / Koa / NestJS 等） | [SKILL_ACCEPTANCE_NODE_BACKEND.md](./SKILL_ACCEPTANCE_NODE_BACKEND.md) |
 | 前端（React / Vue / 原生 Web 等） | [SKILL_ACCEPTANCE_FRONTEND.md](./SKILL_ACCEPTANCE_FRONTEND.md) |
+| TypeScript 通用项目（CLI / SDK / 工具 / 共享库等） | [SKILL_ACCEPTANCE_TYPESCRIPT.md](./SKILL_ACCEPTANCE_TYPESCRIPT.md) |
+| JavaScript 通用项目（CLI / SDK / 工具 / 脚本 / 模块库等） | [SKILL_ACCEPTANCE_JAVASCRIPT.md](./SKILL_ACCEPTANCE_JAVASCRIPT.md) |
 | Java 后端（Spring Boot / Spring MVC 等） | [SKILL_ACCEPTANCE_JAVA_BACKEND.md](./SKILL_ACCEPTANCE_JAVA_BACKEND.md) |
 | Python（FastAPI / Django / 脚本 / 数据处理等） | [SKILL_ACCEPTANCE_PYTHON.md](./SKILL_ACCEPTANCE_PYTHON.md) |
 | 多技术栈混合项目 | 按各层分别路由，逐层验收 |
 
 ---
 
-## 验收结论格式（追加到 SESSIONS）
+## 验收结论格式（写入计划文档）
 
 ```
-### 验收结论 — [计划ID] [计划名称]
+## 验收结论
 
 - 验收时间：YYYY-MM-DD HH:mm
 - 技术栈：XXX
@@ -53,6 +56,8 @@
 - 最终判定：通过 / 部分通过 / 不通过
 - 遗留事项：…
 ```
+
+建议将上述内容追加到计划文档末尾；若计划文档已存在“验收结论”章节，则直接更新该章节。
 
 ---
 

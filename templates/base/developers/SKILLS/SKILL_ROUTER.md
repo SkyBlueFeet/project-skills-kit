@@ -27,7 +27,7 @@
 | **文档修改** | `AGENTS.md` → `DOC-RULES.md` | 不改动 `docs/` 除非明确授权 | ① DOC-RULES 合规检查 → ② 会话留痕 |
 | **计划创建** | `AGENTS.md`（计划索引部分） | 计划 ID 唯一，格式符合索引规范 | ① 在 `AGENTS.md` 计划索引登记 → ② 会话留痕 |
 | **计划进度更新** | `AGENTS.md`（计划索引部分） | 仅更新 `AGENTS.md` 计划索引，不在其他文件重复 | ① 更新 `AGENTS.md` 计划索引 → ② 会话留痕 |
-| **计划完成 / 验收** | `AGENTS.md` → `SKILL_ACCEPTANCE.md` | 按技术栈路由到对应专项验收文档 | ① 验收结论追加到 SESSIONS → ② 更新 `AGENTS.md` 计划索引为"已验收" → ③ 会话留痕 |
+| **计划完成 / 验收** | `AGENTS.md` → `SKILL_ACCEPTANCE.md` | 按技术栈路由到对应专项验收文档 | ① 验收结论写入计划文档 → ② 更新 `AGENTS.md` 计划索引状态 → ③ 会话留痕 |
 | **代码质量巡检** | `SKILL_CODE_QUALITY_CHECK.md` | 按项目语言栈执行对应命令 | ① 检查结论追加到 SESSIONS → ② 会话留痕 |
 | **新项目初始化** | `SKILL_BOOTSTRAP.md` | 按 Bootstrap 检查清单逐项确认 | ① Bootstrap 验收 → ② 会话留痕 |
 | **上下文重建 / 快照** | `SKILL_SNAPSHOT.md` | 快照生成后才开始其他任务 | ① 会话留痕（注明快照状态） |

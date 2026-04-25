@@ -51,6 +51,8 @@
 | [SKILLS/SKILL_ACCEPTANCE.md](./SKILLS/SKILL_ACCEPTANCE.md) | 计划目标验收（入口） | 计划里程碑/全量完成时判定目标是否兑现 |
 | [SKILLS/SKILL_ACCEPTANCE_NODE_BACKEND.md](./SKILLS/SKILL_ACCEPTANCE_NODE_BACKEND.md) | Node.js 后端验收 | Express / Koa / NestJS 等 |
 | [SKILLS/SKILL_ACCEPTANCE_FRONTEND.md](./SKILLS/SKILL_ACCEPTANCE_FRONTEND.md) | 前端验收 | React / Vue / 原生 Web 等 |
+| [SKILLS/SKILL_ACCEPTANCE_TYPESCRIPT.md](./SKILLS/SKILL_ACCEPTANCE_TYPESCRIPT.md) | TypeScript 通用项目验收 | CLI / SDK / 工具 / 共享库等 |
+| [SKILLS/SKILL_ACCEPTANCE_JAVASCRIPT.md](./SKILLS/SKILL_ACCEPTANCE_JAVASCRIPT.md) | JavaScript 通用项目验收 | CLI / SDK / 工具 / 脚本 / 模块库等 |
 | [SKILLS/SKILL_ACCEPTANCE_JAVA_BACKEND.md](./SKILLS/SKILL_ACCEPTANCE_JAVA_BACKEND.md) | Java 后端验收 | Spring Boot / Spring MVC 等 |
 | [SKILLS/SKILL_ACCEPTANCE_PYTHON.md](./SKILLS/SKILL_ACCEPTANCE_PYTHON.md) | Python 验收 | FastAPI / Django / Flask / 脚本 / 数据处理等 |
 
@@ -90,6 +92,7 @@
 |---|---|
 | [ANALYSIS/README.md](./ANALYSIS/README.md) | 分析文档命名、模板与版本锚点要求 |
 | [REPORTS/README.md](./REPORTS/README.md) | 质量报告命名、章节、字段与判定标准 |
+| [PLANS/TEMPLATE.md](./PLANS/TEMPLATE.md) | 计划文档模板，预置 DoD 与验收结论章节 |
 
 ---
 

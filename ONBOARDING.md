@@ -102,7 +102,7 @@ CLAUDE.md           ← 任务入口与约束
 
 > 当前仓库已落地 MVP：
 > - `package.json`
-> - `src/cli.js`（`init / add / migrate / sync / doctor` 命令）
+> - `src/cli.js` + `src/cli/**`（`init / add / migrate / sync / doctor` 命令）
 > - `templates/base/`（规范模板文件）
 
 ### 4.1 目标
@@ -113,7 +113,7 @@ CLAUDE.md           ← 任务入口与约束
 
 | 维度 | 选择 | 理由 |
 |---|---|---|
-| 运行环境 | Node.js（`tsx` / `ts-node`） | 无需编译、跨平台、生态丰富 |
+| 运行环境 | Node.js ESM CLI | 无需编译、跨平台、生态丰富 |
 | 交互库 | `@inquirer/prompts` | 官方维护、ESM 友好、无多余依赖 |
 | 文件操作 | Node.js 内置 `fs/promises` | 零依赖 |
 | 分发方式 | `npx @skybluefeet/skills-kit init` 或本地 `node src/cli.js init` | 低门槛接入 |
@@ -123,7 +123,11 @@ CLAUDE.md           ← 任务入口与约束
 ```
 project-rules/
 ├── src/
-│   └── cli.js           ← 脚手架入口（可执行）
+│   ├── cli.js           ← 可执行入口（只负责启动）
+│   └── cli/
+│       ├── main.js      ← 参数解析与命令分发
+│       ├── commands/*   ← init / add / migrate / sync / doctor
+│       └── utils/*      ← 路径、文件、lock 等复用能力
 ├── templates/            ← 模板文件（对应 developers/ 中可复制的文件）
 │   └── base/
 │       ├── AGENTS.md
@@ -146,9 +150,10 @@ $ npx @skybluefeet/skills-kit init
   ◯ Java
   ◯ Rust
   ◯ HTML/CSS
-? 使用哪个 AI 工具？（多选）:
-  ◉ Claude Code（生成 CLAUDE.md）
-  ◯ OpenCode / Codex / 其他（仅生成 AGENTS.md）
+? 项目类型（CLI 猜测仅作建议，需人工确认）:
+  ◉ TypeScript 通用项目（CLI / SDK / 工具 / 共享库等）
+  ◯ 前端（React / Vue / 原生 Web 等）
+  ◯ Node.js 后端（Express / Koa / Fastify / NestJS 等）
 ? 是否启用文档治理（会话留痕 / 分析报告 / 质量检查）? Yes
 
 ✔ 生成 AGENTS.md
@@ -168,40 +173,35 @@ $ npx @skybluefeet/skills-kit init
   3. 开始第一次会话留痕：developers/SESSIONS/NOTE_YY_MM_DD.md
 ```
 
-### 4.5 核心逻辑（`src/cli.js`）
+### 4.5 核心逻辑（`src/cli/main.js` + `src/cli/commands/*.js`）
 
 ```js
-import { checkbox, confirm, input } from '@inquirer/prompts'
-import { cp, mkdir, readFile, rm, writeFile } from 'fs/promises'
-import { resolve } from 'path'
+import { parseArgs } from './options.js'
+import { runInit } from './commands/init.js'
+import { runDoctor } from './commands/doctor.js'
 
-const TEMPLATE_DIR = new URL('../templates/base/', import.meta.url).pathname
-
-async function main() {
-  const targetDir = resolve(await input({ message: '目标项目根目录', default: '.' }))
-  const languages = await checkbox({ message: '项目主要语言', choices: [...] })
-  const tools    = await checkbox({ message: '使用哪个 AI 工具', choices: [...] })
-  const useDocs  = await confirm({ message: '是否启用文档治理' })
-
-  // 必选文件
-  // 先复制模板全集，再按选项裁剪
-  await cp(TEMPLATE_DIR, targetDir, { recursive: true, force: true })
-  if (!tools.includes('claude')) await rm(`${targetDir}/CLAUDE.md`, { force: true })
-  await pruneLanguageStyles(targetDir, languages)
-  if (!useDocs) await rm(`${targetDir}/developers/SESSIONS`, { recursive: true, force: true })
-  if (useDocs) await createTodaySessionNote(targetDir)
-
-  console.log('\n完成！...')
+const COMMAND_HANDLERS = {
+  init: runInit,
+  doctor: runDoctor
 }
 
-main()
+export async function main(argv = process.argv) {
+  const options = parseArgs(argv)
+  await COMMAND_HANDLERS[options.command](options)
+}
 ```
+
+当前实现将共享逻辑拆到 `src/cli/` 下，主要收益：
+
+- `cli.js` 保持极薄，便于作为 npm bin 在三种通用操作系统上直接启动。
+- 各命令独立维护，后续扩展新命令时不再堆积到单文件。
+- 所有路径与文本归一化逻辑集中处理，降低 Windows / macOS / Linux 差异带来的问题。
 
 ### 4.6 实现里程碑
 
 | 阶段 | 内容 | 交付物 |
 |---|---|---|
-| M1 | 本地脚本可运行，支持文件复制与语言选择 | `src/cli.js` + `templates/` |
+| M1 | 本地脚本可运行，支持文件复制与语言选择 | `src/cli.js` + `src/cli/**` + `templates/` |
 | M2 | 生成带占位符的 `MODULE-BUSINESS-FILE-MAP.md` 框架 | 模板文件 |
 | M3 | 发布为 npm 包，支持 `npx @skybluefeet/skills-kit init` | `package.json` bin 配置 |
 | M4 | 支持差量更新（已存在文件时询问是否覆盖） | `--update` 标志 |

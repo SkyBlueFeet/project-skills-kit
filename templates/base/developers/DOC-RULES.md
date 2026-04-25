@@ -12,6 +12,7 @@
 | `developers/SESSIONS/` | 每次改动后的留痕记录 | `NOTE_YY_MM_DD.md`、`TEMPLATE.md` |
 | `developers/ANALYSIS/` | 需求、方案、代码分析文档 | `ANALYSIS_*.md` |
 | `developers/REPORTS/` | 质量检查报告 | `CODE_QUALITY_REPORT_*.md` |
+| `developers/PLANS/` | 计划文档与计划模板 | `PLAN_*.md`、`TEMPLATE.md` |
 | `developers/SKILLS/` | Agent 可执行操作手册 | `SKILL_*.md` |
 | `docs/` | 面向软件使用者的文档 | `INDEX.md` 与产品使用文档 |
 
@@ -61,7 +62,13 @@
 - 命名：`SKILL_[主题].md`。
 - 必须包含：适用场景、执行命令、预期结果、失败处理建议。
 
-### 3.6 计划索引维护规范（强制）
+### 3.6 计划文档（`developers/PLANS/`）
+
+- 命名：`PLAN_[主题]_[序号].md`，或与 `AGENTS.md` 中计划 ID 一致的可识别文件名。
+- 推荐从 `developers/PLANS/TEMPLATE.md` 复制创建。
+- 必须包含：目标、分阶段任务、DoD、验收结论。
+
+### 3.7 计划索引维护规范（强制）
 
 计划状态变化（创建、更新、完成、撤销）时，**仅**在 `AGENTS.md` 中维护计划索引。
 
@@ -69,13 +76,13 @@
 - `CLAUDE.md`、`developers/INDEX.md` 等文件不重复维护计划表格，只写“见 `AGENTS.md` 计划索引”。
 - 操作步骤见 [`developers/SKILLS/SKILL_PLAN_INDEX.md`](./SKILLS/SKILL_PLAN_INDEX.md)。
 
-### 3.7 多语言规范维护（强制）
+### 3.8 多语言规范维护（强制）
 
 - 总则：`developers/CODE-STYLE.md`。
 - 语言细则：`developers/CODE-STYLES/*_CODE-STYLE.md`。
 - 发生语言级规则变更时，必须同步更新对应细则。
 
-### 3.8 CHANGELOG 维护规范（强制）
+### 3.9 CHANGELOG 维护规范（强制）
 
 项目发布版本时必须维护 `CHANGELOG.md`：
 - 格式规范见 `developers/CHANGELOG-RULES.md`。
@@ -84,7 +91,7 @@
 - 变更记录需关联 Git Commit Hash（7 位）、Issue 编号或 PR 编号。
 - 发布前必须将 `[Unreleased]` 更新为实际版本号与日期。
 
-### 3.9 AI 按需加载与 token 控制（强制）
+### 3.10 AI 按需加载与 token 控制（强制）
 
 - 执行任务时遵循 `developers/AI-CONTEXT-LOADING.md`。
 - 禁止预先全量读取全部文档。

@@ -28,5 +28,7 @@
 | [SKILL_ACCEPTANCE.md](./SKILL_ACCEPTANCE.md) | 计划目标验收（总则与路由） | 计划里程碑/全量完成时，判定目标是否兑现 |
 | [SKILL_ACCEPTANCE_NODE_BACKEND.md](./SKILL_ACCEPTANCE_NODE_BACKEND.md) | Node.js 后端验收 | Express / Koa / Fastify / NestJS 等项目 |
 | [SKILL_ACCEPTANCE_FRONTEND.md](./SKILL_ACCEPTANCE_FRONTEND.md) | 前端验收 | React / Vue / 原生 Web / 小程序等项目 |
+| [SKILL_ACCEPTANCE_TYPESCRIPT.md](./SKILL_ACCEPTANCE_TYPESCRIPT.md) | TypeScript 通用项目验收 | CLI / SDK / 工具 / 共享库等项目 |
+| [SKILL_ACCEPTANCE_JAVASCRIPT.md](./SKILL_ACCEPTANCE_JAVASCRIPT.md) | JavaScript 通用项目验收 | CLI / SDK / 工具 / 脚本 / 模块库等项目 |
 | [SKILL_ACCEPTANCE_JAVA_BACKEND.md](./SKILL_ACCEPTANCE_JAVA_BACKEND.md) | Java 后端验收 | Spring Boot / Spring MVC / Spring Cloud 等项目 |
 | [SKILL_ACCEPTANCE_PYTHON.md](./SKILL_ACCEPTANCE_PYTHON.md) | Python 验收 | FastAPI / Django / Flask / 脚本 / 数据处理等项目 |

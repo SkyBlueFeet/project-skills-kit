@@ -89,4 +89,4 @@ pytest --cov=src       # 含覆盖率（可选）
 
 ## 四、验收结论输出
 
-按 [SKILL_ACCEPTANCE.md](./SKILL_ACCEPTANCE.md) 中的"验收结论格式"在 SESSIONS 中追加记录。
+按 [SKILL_ACCEPTANCE.md](./SKILL_ACCEPTANCE.md) 中的“验收结论格式”写入对应计划文档。
