@@ -5,10 +5,16 @@ import {
   TEMPLATE_BASE,
   getPackageVersion
 } from "../constants.js";
-import { readLock } from "../lock.js";
+import {
+  isManagedByGovernance,
+  isTailoredByGovernance,
+  tailorContentByGovernance
+} from "../governance-tailor.js";
+import { governanceProfileDefaults, readLock } from "../lock.js";
 import { normalizeText } from "../text.js";
 import {
   copyFromTemplate,
+  ensureFile,
   isRelativePathInDir,
   listFilesRecursively,
   normalizeRelativePath,
@@ -30,13 +36,18 @@ export async function runSync(options) {
   const allowOverwrite = options.force;
 
   const lock = await readLock(targetDir);
+  const governance = lock?.governance ?? governanceProfileDefaults("recommended");
   const currentVersion = getPackageVersion();
   if (lock && lock.packageVersion !== currentVersion) {
     console.log(`提示: lock 记录版本 ${lock.packageVersion}，当前包版本 ${currentVersion}，建议检查更新。`);
   }
 
   const templateFiles = await listFilesRecursively(TEMPLATE_BASE);
-  const managed = templateFiles.filter((entry) => !DEFAULT_SYNC_EXCLUDES.has(entry));
+  const managed = templateFiles.filter(
+    (entry) =>
+      !DEFAULT_SYNC_EXCLUDES.has(entry) &&
+      isManagedByGovernance(entry, governance)
+  );
 
   const added = [];
   const updated = [];
@@ -44,9 +55,15 @@ export async function runSync(options) {
   const unchanged = [];
 
   for (const relativePath of managed) {
+    const normalizedPath = normalizeRelativePath(relativePath);
+    const isGovernanceTailored = isTailoredByGovernance(normalizedPath, governance);
     const isStyleFile = isRelativePathInDir(relativePath, path.join("developers", "CODE-STYLES"));
     const source = path.join(TEMPLATE_BASE, relativePath);
     const destination = path.join(targetDir, relativePath);
+    let sourceText = await readText(source);
+    if (isGovernanceTailored) {
+      sourceText = tailorContentByGovernance(sourceText, governance, normalizedPath);
+    }
     const exists = await pathExists(destination);
 
     if (!exists) {
@@ -56,22 +73,27 @@ export async function runSync(options) {
 
       added.push(relativePath);
       if (!modeCheck) {
-        await copyFromTemplate(targetDir, relativePath, true);
+        if (isGovernanceTailored) {
+          await ensureFile(destination, sourceText);
+        } else {
+          await copyFromTemplate(targetDir, relativePath, true);
+        }
       }
       continue;
     }
 
-    const [sourceText, destinationText] = await Promise.all([
-      readText(source),
-      readText(destination)
-    ]);
+    const destinationText = await readText(destination);
     if (normalizeText(sourceText) === normalizeText(destinationText)) {
       unchanged.push(relativePath);
       continue;
     }
 
     if (!modeCheck && allowOverwrite) {
-      await copyFromTemplate(targetDir, relativePath, true);
+      if (isGovernanceTailored) {
+        await ensureFile(destination, sourceText);
+      } else {
+        await copyFromTemplate(targetDir, relativePath, true);
+      }
       updated.push(relativePath);
     } else {
       conflict.push(relativePath);

@@ -12,15 +12,26 @@ import {
 } from "../constants.js";
 import {
   ensureAcceptanceSkillInstalled,
+  governanceProfileDefaults,
   readLock,
   writeLock
 } from "../lock.js";
+import {
+  isTailoredByGovernance,
+  tailorContentByGovernance
+} from "../governance-tailor.js";
 import {
   formatProjectTypeChoices,
   inferProjectTypeFromPackageJson,
   readProjectPackageJson
 } from "../project.js";
-import { copyFromTemplate, pathExists } from "../utils/fs.js";
+import {
+  copyFromTemplate,
+  ensureFile,
+  normalizeRelativePath,
+  pathExists,
+  readText
+} from "../utils/fs.js";
 
 /** @typedef {import("../options.js").CliOptions} CliOptions */
 
@@ -35,20 +46,35 @@ export async function runDoctor(options) {
   const errors = [];
   const warnings = [];
   const fixed = [];
+  const lock = await readLock(targetDir);
+  const governance = lock?.governance ?? governanceProfileDefaults("recommended");
 
   for (const requiredFile of REQUIRED_FILES) {
     const absolutePath = path.join(targetDir, requiredFile);
     if (!(await pathExists(absolutePath))) {
       errors.push(`缺失必需文件: ${requiredFile}`);
       if (options.fix) {
-        const templateSource = path.join(TEMPLATE_BASE, requiredFile);
-        if (await pathExists(templateSource)) {
-          await copyFromTemplate(targetDir, requiredFile, false);
+        if (await restoreTemplateFileByGovernance(targetDir, requiredFile, governance, false)) {
           fixed.push(`已补齐: ${requiredFile}`);
         }
       }
     }
   }
+
+  await checkGovernanceManagedFile(
+    {
+      mode: governance.skillRouter,
+      relativePath: "developers/SKILLS/SKILL_ROUTER.md",
+      missingMessage: "缺失统一任务路由入口: developers/SKILLS/SKILL_ROUTER.md",
+      fixedMessage: "已补齐: developers/SKILLS/SKILL_ROUTER.md"
+    },
+    targetDir,
+    options.fix,
+    governance,
+    errors,
+    warnings,
+    fixed
+  );
 
   const brokenLinks = await checkMarkdownLinks(targetDir, [
     "AGENTS.md",
@@ -81,7 +107,7 @@ export async function runDoctor(options) {
   }
 
   const docRulesPath = path.join(targetDir, "developers", "DOC-RULES.md");
-  if (await pathExists(docRulesPath)) {
+  if (governance.planIndex !== "off" && (await pathExists(docRulesPath))) {
     const docRules = await readFile(docRulesPath, "utf8");
     const oldPatternRegex = /-\s*`AGENTS\.md`[\s\S]*?-\s*`CLAUDE\.md`[\s\S]*?-\s*`developers\/INDEX\.md`/;
     if (oldPatternRegex.test(docRules)) {
@@ -91,27 +117,20 @@ export async function runDoctor(options) {
     }
   }
 
-  const sessionsTemplate = path.join(
+  await checkGovernanceManagedFile(
+    {
+      mode: governance.sessionNotes,
+      relativePath: "developers/SESSIONS/TEMPLATE.md",
+      missingMessage: "缺失 developers/SESSIONS/TEMPLATE.md，无法标准化会话留痕。",
+      fixedMessage: "已补齐: developers/SESSIONS/TEMPLATE.md"
+    },
     targetDir,
-    "developers",
-    "SESSIONS",
-    "TEMPLATE.md"
+    options.fix,
+    governance,
+    errors,
+    warnings,
+    fixed
   );
-  if (!(await pathExists(sessionsTemplate))) {
-    warnings.push("缺失 developers/SESSIONS/TEMPLATE.md，无法标准化会话留痕。");
-    if (options.fix) {
-      const templateSource = path.join(
-        TEMPLATE_BASE,
-        "developers",
-        "SESSIONS",
-        "TEMPLATE.md"
-      );
-      if (await pathExists(templateSource)) {
-        await copyFromTemplate(targetDir, "developers/SESSIONS/TEMPLATE.md", false);
-        fixed.push("已补齐: developers/SESSIONS/TEMPLATE.md");
-      }
-    }
-  }
 
   const stylesDir = path.join(targetDir, "developers", "CODE-STYLES");
   if (await pathExists(stylesDir)) {
@@ -122,31 +141,25 @@ export async function runDoctor(options) {
     }
   }
 
-  for (const { file, label } of [
-    { file: "CLAUDE.md", label: "CLAUDE.md" },
-    { file: "developers/INDEX.md", label: "developers/INDEX.md" }
-  ]) {
-    const absolutePath = path.join(targetDir, file);
-    if (await pathExists(absolutePath)) {
-      const content = await readFile(absolutePath, "utf8");
-      if (content.includes("| 计划ID |") || content.includes("| 计划id |")) {
-        warnings.push(
-          `口径冲突: ${label} 含独立计划索引表，计划索引应仅维护于 AGENTS.md。建议执行 skills-kit migrate --check。`
-        );
+  if (governance.planIndex !== "off") {
+    for (const { file, label } of [
+      { file: "CLAUDE.md", label: "CLAUDE.md" },
+      { file: "developers/INDEX.md", label: "developers/INDEX.md" }
+    ]) {
+      const absolutePath = path.join(targetDir, file);
+      if (await pathExists(absolutePath)) {
+        const content = await readFile(absolutePath, "utf8");
+        if (content.includes("| 计划ID |") || content.includes("| 计划id |")) {
+          warnings.push(
+            `口径冲突: ${label} 含独立计划索引表，计划索引应仅维护于 AGENTS.md。建议执行 skills-kit migrate --check。`
+          );
+        }
       }
     }
   }
 
   const routerPath = path.join(targetDir, "developers", "SKILLS", "SKILL_ROUTER.md");
-  if (!(await pathExists(routerPath)) && options.fix) {
-    const templateSource = path.join(TEMPLATE_BASE, "developers", "SKILLS", "SKILL_ROUTER.md");
-    if (await pathExists(templateSource)) {
-      await copyFromTemplate(targetDir, "developers/SKILLS/SKILL_ROUTER.md", false);
-      fixed.push("已补齐: developers/SKILLS/SKILL_ROUTER.md");
-    }
-  }
-
-  if (await pathExists(routerPath)) {
+  if (governance.skillRouter !== "off" && (await pathExists(routerPath))) {
     const routerContent = await readFile(routerPath, "utf8");
     const skillLinks = extractLocalLinks(routerContent);
     const skillsDir = path.dirname(routerPath);
@@ -158,7 +171,6 @@ export async function runDoctor(options) {
     }
   }
 
-  const lock = await readLock(targetDir);
   if (lock) {
     const currentVersion = getPackageVersion();
     if (lock.packageVersion !== currentVersion) {
@@ -248,6 +260,78 @@ export async function runDoctor(options) {
   if (errors.length > 0) {
     process.exitCode = 1;
   }
+}
+
+/**
+ * 按治理开关校验受管文件是否存在，并在允许时自动补齐。
+ *
+ * @param {{ mode: import("../lock.js").GovernanceMode, relativePath: string, missingMessage: string, fixedMessage: string }} config
+ * @param {string} targetDir
+ * @param {boolean} fix
+ * @param {import("../lock.js").GovernanceConfig} governance
+ * @param {string[]} errors
+ * @param {string[]} warnings
+ * @param {string[]} fixed
+ * @returns {Promise<void>}
+ */
+async function checkGovernanceManagedFile(config, targetDir, fix, governance, errors, warnings, fixed) {
+  if (config.mode === "off") {
+    return;
+  }
+
+  const absolutePath = path.join(targetDir, config.relativePath);
+  if (await pathExists(absolutePath)) {
+    return;
+  }
+
+  if (config.mode === "required") {
+    errors.push(config.missingMessage);
+  } else {
+    warnings.push(config.missingMessage);
+  }
+
+  if (!fix) {
+    return;
+  }
+
+  if (await restoreTemplateFileByGovernance(targetDir, config.relativePath, governance, false)) {
+    fixed.push(config.fixedMessage);
+  }
+}
+
+/**
+ * 从模板补齐文件时应用当前治理裁剪，避免 `doctor --fix` 恢复原始模板后再次产生断链。
+ *
+ * @param {string} targetDir
+ * @param {string} relativePath
+ * @param {import("../lock.js").GovernanceConfig} governance
+ * @param {boolean} force
+ * @returns {Promise<boolean>}
+ */
+async function restoreTemplateFileByGovernance(targetDir, relativePath, governance, force) {
+  const normalizedPath = normalizeRelativePath(relativePath);
+  const templateSource = path.join(TEMPLATE_BASE, normalizedPath);
+  if (!(await pathExists(templateSource))) {
+    return false;
+  }
+
+  if (isTailoredByGovernance(normalizedPath, governance)) {
+    const destination = path.join(targetDir, normalizedPath);
+    if (!force && (await pathExists(destination))) {
+      console.log(`跳过（已存在）: ${normalizedPath}`);
+      return false;
+    }
+
+    const sourceText = await readText(templateSource);
+    await ensureFile(
+      destination,
+      tailorContentByGovernance(sourceText, governance, normalizedPath)
+    );
+    return true;
+  }
+
+  await copyFromTemplate(targetDir, normalizedPath, force);
+  return true;
 }
 
 /**

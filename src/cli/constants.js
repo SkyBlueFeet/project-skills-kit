@@ -55,9 +55,19 @@ export const TEMPLATE_SKILLS_DIR = path.join(TEMPLATE_BASE, "developers", "SKILL
  */
 export const REQUIRED_FILES = [
   "AGENTS.md",
-  "developers/INDEX.md",
-  "developers/SKILLS/SKILL_ROUTER.md"
+  "developers/INDEX.md"
 ];
+
+/**
+ * 文档治理强度预设。
+ *
+ * `recommended` 为推荐默认（关闭会话留痕、保留质量检查），
+ * `strict` 保持全部强制收尾，`balanced` 降低部分强制性，
+ * `minimal` 只保留最核心入口，`off` 表示关闭文档治理配套。
+ *
+ * @type {string[]}
+ */
+export const GOVERNANCE_PROFILES = ["recommended", "strict", "balanced", "minimal", "off"];
 
 /**
  * 所有可被裁剪或补装的语言规范文件名。

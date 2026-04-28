@@ -1,4 +1,4 @@
-import { PROJECT_TYPES } from "./constants.js";
+import { GOVERNANCE_PROFILES, PROJECT_TYPES } from "./constants.js";
 
 /**
  * @typedef {object} CliOptions
@@ -13,6 +13,11 @@ import { PROJECT_TYPES } from "./constants.js";
  * @property {string[] | null} languages
  * @property {string | null} projectType
  * @property {"file" | "module" | "function" | null} indexGranularity
+ * @property {"recommended" | "strict" | "balanced" | "minimal" | "off" | null} governanceProfile
+ * @property {"required" | "optional" | "off" | null} sessionNotesMode
+ * @property {"required" | "optional" | "off" | null} qualityChecksMode
+ * @property {"required" | "optional" | "off" | null} planIndexMode
+ * @property {"required" | "optional" | "off" | null} routerMode
  * @property {boolean} help
  */
 
@@ -48,6 +53,11 @@ export function parseArgs(argv) {
       : null,
     projectType: parseProjectType(projectTypeArg),
     indexGranularity: parseIndexGranularity(args),
+    governanceProfile: parseGovernanceProfile(args),
+    sessionNotesMode: parseGovernanceMode(args, "--session-notes="),
+    qualityChecksMode: parseGovernanceMode(args, "--quality-checks="),
+    planIndexMode: parseGovernanceMode(args, "--plan-index="),
+    routerMode: parseGovernanceMode(args, "--router="),
     help: flags.has("--help") || flags.has("-h")
   };
 }
@@ -61,7 +71,7 @@ export function printHelp() {
   console.log("skills-kit");
   console.log("");
   console.log("用法:");
-  console.log("  skills-kit init [--yes] [--languages=typescript,python] [--project-type=frontend|backend-node|typescript-general|javascript-general|backend-java|python|mixed] [--index-granularity=file|module|function]");
+  console.log("  skills-kit init [--yes] [--languages=typescript,python] [--project-type=frontend|backend-node|typescript-general|javascript-general|backend-java|python|mixed] [--index-granularity=file|module|function] [--governance-profile=recommended|strict|balanced|minimal|off] [--session-notes=required|optional|off] [--quality-checks=required|optional|off] [--plan-index=required|optional|off] [--router=required|optional|off]");
   console.log("  skills-kit add <claude|language|skill|skill-pack> [name] [--target=.]");
   console.log("  skills-kit migrate [--check|--apply] [--target=.]");
   console.log("  skills-kit sync [--check|--apply] [--force] [--target=.]");
@@ -70,6 +80,7 @@ export function printHelp() {
   console.log("");
   console.log("语言可选值: typescript, javascript, java, python, rust, web");
   console.log("项目类型可选值: frontend, backend-node, typescript-general, javascript-general, backend-java, python, mixed");
+  console.log(`治理档位可选值: ${GOVERNANCE_PROFILES.join(", ")}`);
   console.log("skill-pack 可选值: core, governance, frontend, backend-node, backend-java, python");
 }
 
@@ -98,4 +109,33 @@ function parseIndexGranularity(args) {
 
   const value = granularityArg.slice("--index-granularity=".length).toLowerCase();
   return ["file", "module", "function"].includes(value) ? value : null;
+}
+
+/**
+ * @param {string[]} args
+ * @returns {"recommended" | "strict" | "balanced" | "minimal" | "off" | null}
+ */
+function parseGovernanceProfile(args) {
+  const profileArg = args.find((value) => value.startsWith("--governance-profile="));
+  if (!profileArg) {
+    return null;
+  }
+
+  const value = profileArg.slice("--governance-profile=".length).toLowerCase();
+  return GOVERNANCE_PROFILES.includes(value) ? value : null;
+}
+
+/**
+ * @param {string[]} args
+ * @param {string} prefix
+ * @returns {"required" | "optional" | "off" | null}
+ */
+function parseGovernanceMode(args, prefix) {
+  const modeArg = args.find((value) => value.startsWith(prefix));
+  if (!modeArg) {
+    return null;
+  }
+
+  const value = modeArg.slice(prefix.length).toLowerCase();
+  return ["required", "optional", "off"].includes(value) ? value : null;
 }

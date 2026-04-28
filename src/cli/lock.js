@@ -29,8 +29,30 @@ import { copyFromTemplate, normalizeRelativePath, pathExists } from "./utils/fs.
  * @property {string | null} projectType 当前项目类型。
  * @property {boolean} includeClaude 是否启用了 `CLAUDE.md`。
  * @property {boolean} includeDocsGovernance 是否启用了文档治理相关目录与文档。
+ * @property {GovernanceConfig} governance 文档治理开关配置。
  * @property {"file" | "module" | "function" | null} codeIndexGranularity 代码索引粒度。
  * @property {InstalledSkillRecord[]} skills 已安装的 skill 清单。
+ */
+
+/**
+ * 单个治理项的强度。
+ *
+ * - `required`：保留现有强制约束
+ * - `optional`：保留文档/流程，但 doctor 降级为提示
+ * - `off`：不再作为治理要求
+ *
+ * @typedef {"required" | "optional" | "off"} GovernanceMode
+ */
+
+/**
+ * 文档治理开关。
+ *
+ * @typedef {object} GovernanceConfig
+ * @property {"recommended" | "strict" | "balanced" | "minimal" | "off"} profile 预设档位，便于快速套用。
+ * @property {GovernanceMode} skillRouter 是否强制以 `SKILL_ROUTER.md` 作为统一入口。
+ * @property {GovernanceMode} sessionNotes 是否强制会话留痕。
+ * @property {GovernanceMode} qualityChecks 是否强制质量检查收尾。
+ * @property {GovernanceMode} planIndex 是否强制维护 `AGENTS.md` 计划索引。
  */
 
 /**
@@ -46,7 +68,8 @@ export async function readLock(targetRoot) {
   }
 
   try {
-    return JSON.parse(await readFile(lockPath, "utf8"));
+    const lock = JSON.parse(await readFile(lockPath, "utf8"));
+    return normalizeLock(lock);
   } catch {
     return null;
   }
@@ -61,6 +84,7 @@ export async function readLock(targetRoot) {
  */
 export async function writeLock(targetRoot, lock) {
   const lockPath = path.join(targetRoot, LOCK_FILE);
+  lock.governance = normalizeGovernance(lock.governance, lock.includeDocsGovernance);
   lock.updatedAt = new Date().toISOString();
   await writeFile(lockPath, JSON.stringify(lock, null, 2), "utf8");
 }
@@ -73,6 +97,7 @@ export async function writeLock(targetRoot, lock) {
  * @param {string | null} projectType
  * @param {boolean} includeClaude
  * @param {boolean} includeDocsGovernance
+ * @param {GovernanceConfig | null | undefined} governance
  * @param {"file" | "module" | "function" | null} codeIndexGranularity
  * @returns {SkillsLock}
  */
@@ -82,6 +107,7 @@ export function makeLock(
   projectType,
   includeClaude,
   includeDocsGovernance,
+  governance,
   codeIndexGranularity
 ) {
   const now = new Date().toISOString();
@@ -95,8 +121,116 @@ export function makeLock(
     projectType: projectType ?? null,
     includeClaude,
     includeDocsGovernance,
+    governance: normalizeGovernance(governance, includeDocsGovernance),
     codeIndexGranularity: codeIndexGranularity ?? null,
     skills: []
+  };
+}
+
+/**
+ * 根据预设档位生成默认治理开关。
+ *
+ * @param {"recommended" | "strict" | "balanced" | "minimal" | "off" | null | undefined} profile
+ * @returns {GovernanceConfig}
+ */
+export function governanceProfileDefaults(profile) {
+  switch (profile) {
+    case "recommended":
+      return {
+        profile: "recommended",
+        skillRouter: "optional",
+        sessionNotes: "off",
+        qualityChecks: "required",
+        planIndex: "optional"
+      };
+    case "balanced":
+      return {
+        profile: "balanced",
+        skillRouter: "required",
+        sessionNotes: "optional",
+        qualityChecks: "optional",
+        planIndex: "required"
+      };
+    case "minimal":
+      return {
+        profile: "minimal",
+        skillRouter: "optional",
+        sessionNotes: "off",
+        qualityChecks: "off",
+        planIndex: "optional"
+      };
+    case "off":
+      return {
+        profile: "off",
+        skillRouter: "off",
+        sessionNotes: "off",
+        qualityChecks: "off",
+        planIndex: "off"
+      };
+    case "strict":
+      return {
+        profile: "strict",
+        skillRouter: "required",
+        sessionNotes: "required",
+        qualityChecks: "required",
+        planIndex: "required"
+      };
+    default:
+      return {
+        profile: "recommended",
+        skillRouter: "optional",
+        sessionNotes: "off",
+        qualityChecks: "required",
+        planIndex: "optional"
+      };
+  }
+}
+
+/**
+ * 归一化治理配置，兼容旧 lock 或部分字段缺失的情况。
+ *
+ * @param {Partial<GovernanceConfig> | null | undefined} governance
+ * @param {boolean} includeDocsGovernance
+ * @returns {GovernanceConfig}
+ */
+export function normalizeGovernance(governance, includeDocsGovernance = true) {
+  if (!includeDocsGovernance) {
+    return governanceProfileDefaults("off");
+  }
+
+  const profile = includeDocsGovernance
+    ? (governance?.profile ?? "recommended")
+    : "off";
+  const defaults = governanceProfileDefaults(profile);
+
+  return {
+    profile: defaults.profile,
+    skillRouter: governance?.skillRouter ?? defaults.skillRouter,
+    sessionNotes: governance?.sessionNotes ?? defaults.sessionNotes,
+    qualityChecks: governance?.qualityChecks ?? defaults.qualityChecks,
+    planIndex: governance?.planIndex ?? defaults.planIndex
+  };
+}
+
+/**
+ * 对读取到的 lock 做兼容性补齐。
+ *
+ * @param {Partial<SkillsLock>} lock
+ * @returns {SkillsLock}
+ */
+function normalizeLock(lock) {
+  return {
+    version: lock.version ?? 1,
+    packageVersion: lock.packageVersion ?? "0.0.0",
+    createdAt: lock.createdAt ?? new Date().toISOString(),
+    updatedAt: lock.updatedAt ?? new Date().toISOString(),
+    languages: Array.isArray(lock.languages) ? lock.languages : [],
+    projectType: lock.projectType ?? null,
+    includeClaude: lock.includeClaude ?? true,
+    includeDocsGovernance: lock.includeDocsGovernance ?? true,
+    governance: normalizeGovernance(lock.governance, lock.includeDocsGovernance ?? true),
+    codeIndexGranularity: lock.codeIndexGranularity ?? null,
+    skills: Array.isArray(lock.skills) ? lock.skills : []
   };
 }
 
