@@ -257,7 +257,7 @@ function tailorIndexContent(content, governance) {
   if (!governanceOff) {
     aiQuickRows.push("| 新项目初始化 | [SKILLS/SKILL_BOOTSTRAP.md](./SKILLS/SKILL_BOOTSTRAP.md) |");
   }
-  aiQuickRows.push("| 代码编辑任务（强制遵守语言规范） | [CODE-STYLE.md](./CODE-STYLE.md) + [CODE-STYLES/](./CODE-STYLES/) 对应语言规范 |");
+  aiQuickRows.push("| 代码编辑任务（强制遵守语言/场景规范） | [CODE-STYLE.md](./CODE-STYLE.md) + [CODE-STYLES/](./CODE-STYLES/) 对应语言/场景规范 |");
   aiQuickRows.push("| 文档维护 | [DOC-RULES.md](./DOC-RULES.md) |");
   if (governance.qualityChecks !== "off") {
     aiQuickRows.push("| 质量验收 | [SKILLS/SKILL_CODE_QUALITY_CHECK.md](./SKILLS/SKILL_CODE_QUALITY_CHECK.md) |");
@@ -280,7 +280,7 @@ function tailorIndexContent(content, governance) {
     }
     skillRows.push("| [SKILLS/SKILL_BOOTSTRAP.md](./SKILLS/SKILL_BOOTSTRAP.md) | 新项目初始化与最低可用检查 | init 后、迁移后、首次接入 |");
     skillRows.push("| [SKILLS/SKILL_DOC_GOVERNANCE.md](./SKILLS/SKILL_DOC_GOVERNANCE.md) | 文档治理（新建/修改/归档流程） | 任何文档变更时 |");
-    skillRows.push("| [SKILLS/SKILL_CODE_GOVERNANCE.md](./SKILLS/SKILL_CODE_GOVERNANCE.md) | 代码治理（改动流程 + 语言规范路由） | 功能实现、修复、重构时 |");
+    skillRows.push("| [SKILLS/SKILL_CODE_GOVERNANCE.md](./SKILLS/SKILL_CODE_GOVERNANCE.md) | 代码治理（改动流程 + 语言/场景规范路由） | 功能实现、修复、重构时 |");
     if (governance.planIndex !== "off") {
       skillRows.push("| [SKILLS/SKILL_PLAN_INDEX.md](./SKILLS/SKILL_PLAN_INDEX.md) | 计划索引管理（生命周期操作） | 计划创建/更新/完成/撤销时 |");
     }
@@ -412,7 +412,7 @@ function tailorClaudeContent(content, governance) {
   const taskEntries = [
     "- 开发索引：`developers/INDEX.md`",
     "- 文档规则：`developers/DOC-RULES.md`",
-    "- 代码规范：`developers/CODE-STYLE.md` + `developers/CODE-STYLES/*_CODE-STYLE.md`",
+    "- 代码规范：`developers/CODE-STYLE.md` + `developers/CODE-STYLES/*_CODE-STYLE.md`（语言/场景）",
     "- 按需加载：`developers/AI-CONTEXT-LOADING.md`"
   ];
   if (governance.sessionNotes !== "off") {
@@ -469,7 +469,7 @@ function tailorSkillsReadmeContent(content, governance) {
   }
   skillRows.push("| [SKILL_BOOTSTRAP.md](./SKILL_BOOTSTRAP.md) | 新项目初始化与最低可用检查 | init 后、迁移后、首次接入 |");
   skillRows.push("| [SKILL_DOC_GOVERNANCE.md](./SKILL_DOC_GOVERNANCE.md) | 文档治理（新建/修改/归档流程） | 任何文档变更时 |");
-  skillRows.push("| [SKILL_CODE_GOVERNANCE.md](./SKILL_CODE_GOVERNANCE.md) | 代码治理（改动流程 + 语言规范路由） | 功能实现、修复、重构时 |");
+  skillRows.push("| [SKILL_CODE_GOVERNANCE.md](./SKILL_CODE_GOVERNANCE.md) | 代码治理（改动流程 + 语言/场景规范路由） | 功能实现、修复、重构时 |");
   if (governance.planIndex !== "off") {
     skillRows.push("| [SKILL_PLAN_INDEX.md](./SKILL_PLAN_INDEX.md) | 计划索引管理（生命周期操作） | 计划创建/更新/完成/撤销时 |");
   }
@@ -527,7 +527,7 @@ function buildAgentsTaskEntry(governance) {
   }
   rows.push("| 浏览开发文档目录 | `developers/INDEX.md` |");
   rows.push("| 控制上下文读取与 token 成本 | `developers/AI-CONTEXT-LOADING.md` |");
-  rows.push("| 代码编辑任务（强制遵守语言规范） | `developers/CODE-STYLE.md` + `developers/CODE-STYLES/` 对应语言规范 |");
+  rows.push("| 代码编辑任务（强制遵守语言/场景规范） | `developers/CODE-STYLE.md` + `developers/CODE-STYLES/` 对应语言/场景规范 |");
   rows.push("| 新建或修改文档 | `developers/DOC-RULES.md` |");
   if (!governanceOff) {
     rows.splice(1, 0, "| 新项目初始化 | `developers/SKILLS/SKILL_BOOTSTRAP.md` |");
@@ -565,7 +565,7 @@ function buildAgentsReadingStrategy(governance) {
     "- `developers/INDEX.md`",
     "- `developers/DOC-RULES.md`",
     "- `developers/CODE-STYLE.md`",
-    "- 对应语言规范：`developers/CODE-STYLES/*_CODE-STYLE.md`",
+    "- 对应语言/场景规范：`developers/CODE-STYLES/*_CODE-STYLE.md`",
     "- `developers/AI-CONTEXT-LOADING.md`"
   ];
   if (!isGovernanceProfileOff(governance)) {
@@ -599,7 +599,7 @@ function buildAgentsPrinciples(governance) {
     items.push("- **计划单源**：计划索引仅在本文件（`AGENTS.md`）维护，创建/更新/完成/撤销时同步更新此处。");
   }
   items.push("- **兼容优先**：对外接口变更必须版本化或提供兼容迁移路径。");
-  items.push("- **注释有约束**：修改代码时同步检查 `developers/CODE-STYLE.md` 与对应语言细则中的注释/JSDoc 要求；导出函数、共享常量、配置映射、关键数据结构如存在边界或隐含约束，不得省略必要文档注释。");
+  items.push("- **注释有约束**：修改代码时同步检查 `developers/CODE-STYLE.md` 与对应语言/场景细则中的注释/JSDoc 要求；导出函数、共享常量、配置映射、关键数据结构如存在边界或隐含约束，不得省略必要文档注释。");
 
   return ["## 通用原则", "", ...items].join("\n");
 }
@@ -609,7 +609,7 @@ function tailorAiContextLoadingContent(content, governance) {
   const taskRows = [
     buildAiContextTaskRow(
       "代码修改",
-      "`AGENTS.md` + `developers/CODE-STYLE.md` + `developers/CODE-STYLES/` 对应语言规范",
+      "`AGENTS.md` + `developers/CODE-STYLE.md` + `developers/CODE-STYLES/` 对应语言/场景规范",
       governance.qualityChecks !== "off"
         ? "`developers/SKILLS/SKILL_CODE_QUALITY_CHECK.md`"
         : "—"
@@ -775,11 +775,11 @@ function tailorDocRulesContent(content, governance) {
   }
 
   addSection(
-    "多语言规范维护（强制）",
+    "多语言/场景规范维护（强制）",
     [
       "- 总则：`developers/CODE-STYLE.md`。",
-      "- 语言细则：`developers/CODE-STYLES/*_CODE-STYLE.md`。",
-      "- 发生语言级规则变更时，必须同步更新对应细则。"
+      "- 语言/场景细则：`developers/CODE-STYLES/*_CODE-STYLE.md`。",
+      "- 发生语言级或前后端场景级规则变更时，必须同步更新对应细则。"
     ]
   );
   addSection(
@@ -854,7 +854,7 @@ function tailorCodeStyleContent(content, governance) {
     "- 涉及跨语言接口变更时，必须同步更新：",
     "  - `README.md`",
     "  - 相关示例",
-    "  - 对应语言规范或分析文档"
+    "  - 对应语言/场景规范或分析文档"
   ];
 
   if (governance.sessionNotes !== "off") {
@@ -871,7 +871,7 @@ function tailorCodeStyleContent(content, governance) {
       "\n\n## 5. 质量门禁（建议基线）\n\n" +
       "- 每种语言至少执行：格式化、静态检查、单测（如适用）。\n" +
       "- 对高风险变更（接口、并发、序列化协议）补充回归验证。\n" +
-      "- 具体命令以各语言规范文档为准。";
+      "- 具体命令以各语言/场景规范文档为准。";
   }
 
   return content.replace(/## 4\. 文档与留痕（强制）[\s\S]*$/u, replacement);
@@ -915,8 +915,8 @@ function tailorBootstrapSkillContent(content, governance) {
   }
 
   let next = content.replace(
-    /### 必需文件[\s\S]*?### 语言规范/u,
-    ["### 必需文件", "", ...required, "", "### 语言规范"].join("\n")
+    /### 必需文件[\s\S]*?### 语言(?:\/场景)?规范/u,
+    ["### 必需文件", "", ...required, "", "### 语言/场景规范"].join("\n")
   );
   next = next.replace(
     /### 可选文件[\s\S]*?---(\r?\n){2}## 验收判定/u,
@@ -995,7 +995,7 @@ function tailorCodeQualityCheckSkillContent(content, governance) {
   const criteria = [
     "- 已执行当前项目所需的格式化/静态检查/测试/构建。",
     "- 关键改动路径至少覆盖 1 条成功路径与 1 条失败路径验证。",
-    "- 已检查本次改动是否满足 `developers/CODE-STYLE.md` 与对应语言细则中的注释/JSDoc 约束；新增或修改的导出函数、共享常量、配置映射、关键数据结构在必要时已补结构化文档注释。"
+    "- 已检查本次改动是否满足 `developers/CODE-STYLE.md` 与对应语言/场景细则中的注释/JSDoc 约束；新增或修改的导出函数、共享常量、配置映射、关键数据结构在必要时已补结构化文档注释。"
   ];
   if (governance.sessionNotes !== "off") {
     criteria.push("- 结果可复现，并完成会话留痕。");
@@ -1155,9 +1155,9 @@ function tailorAcceptanceSkillContent(content, governance) {
 
 function tailorCodeGovernanceSkillContent(content, governance) {
   const steps = [
-    "### Step 1：语言规范路由",
+    "### Step 1：语言/场景规范路由",
     "",
-    "根据改动涉及的文件类型，读取对应语言规范：",
+    "根据改动涉及的文件类型，读取对应语言规范；若项目属于前端或后端应用，还必须追加读取对应场景规范：",
     "",
     "| 文件类型 | 读取规范 |",
     "|---|---|",
@@ -1170,7 +1170,12 @@ function tailorCodeGovernanceSkillContent(content, governance) {
     "| `.css` / `.scss` | `developers/CODE-STYLES/CSS_CODE-STYLE.md` |",
     "| 多语言混合 | 按各文件类型分别路由 |",
     "",
-    "通用约束始终适用：`developers/CODE-STYLE.md`（总则）。",
+    "| 应用场景 | 追加读取规范 |",
+    "|---|---|",
+    "| 前端应用 / 页面 / 组件 / Hook / Composable | `developers/CODE-STYLES/FRONTEND_CODE-STYLE.md` |",
+    "| 后端服务 / API / 任务 / 消息消费 / 数据访问 | `developers/CODE-STYLES/BACKEND_CODE-STYLE.md` |",
+    "",
+    "通用约束始终适用：`developers/CODE-STYLE.md`（总则）。语言规范与场景规范冲突时，以更具体的场景规范为准。",
     "",
     "### Step 2：改动前核查",
     "",
@@ -1213,7 +1218,7 @@ function tailorCodeGovernanceSkillContent(content, governance) {
     "若改动涉及对外接口（API、协议、公共函数签名），必须同步更新：",
     "- `README.md`（如有接口说明）",
     "- 相关示例代码",
-    "- 对应语言规范或分析文档",
+    "- 对应语言/场景规范或分析文档",
     "",
     `### Step ${governance.qualityChecks !== "off" ? "6" : "5"}：代码索引同步`,
     "",
@@ -1259,8 +1264,8 @@ function tailorCodeGovernanceSkillContent(content, governance) {
     "**Q：改动很小（单行修复），是否需要全套流程？**  ",
     `A：Step 1-3 必须，Step 4${governance.qualityChecks !== "off" ? " 可简化（人工确认即可），Step 5 按实际情况判断。" : " 按实际情况判断。"}${governance.sessionNotes !== "off" ? "会话留痕不可省略。" : ""}`,
     "",
-    "**Q：语言规范文件不存在怎么办？**  ",
-    "A：执行 `npx @skybluefeet/skills-kit add language <name>` 安装，或使用总则 `CODE-STYLE.md` 作为基线。"
+    "**Q：语言或场景规范文件不存在怎么办？**  ",
+    "A：语言规范执行 `npx @skybluefeet/skills-kit add language <name>` 安装；场景规范从模板 `developers/CODE-STYLES/` 补齐，或使用总则 `CODE-STYLE.md` 作为基线。"
   ];
   if (governance.sessionNotes !== "off") {
     faqs.push(
@@ -1359,8 +1364,8 @@ function buildRouterTable(governance) {
   }
 
   const rows = [
-    `| **功能实现** | \`AGENTS.md\` → 对应语言规范 | CODE-STYLE 强制遵守 | ${formatActionChain(codeActions)} |`,
-    `| **问题修复 / Bug Fix** | \`AGENTS.md\` → 对应语言规范 | 定位根因再改动，不引入新问题 | ${formatActionChain(codeActions)} |`,
+    `| **功能实现** | \`AGENTS.md\` → 对应语言/场景规范 | CODE-STYLE 强制遵守 | ${formatActionChain(codeActions)} |`,
+    `| **问题修复 / Bug Fix** | \`AGENTS.md\` → 对应语言/场景规范 | 定位根因再改动，不引入新问题 | ${formatActionChain(codeActions)} |`,
     `| **方案设计 / 文档输出** | \`AGENTS.md\` → \`DOC-RULES.md\` | 遵守文档命名与版本锚点规则 | ${formatActionChain(docActions)} |`,
     `| **文档修改** | \`AGENTS.md\` → \`DOC-RULES.md\` | 不改动 \`docs/\` 除非明确授权 | ${formatActionChain(docActions)} |`
   ];

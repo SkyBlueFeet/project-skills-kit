@@ -24,6 +24,8 @@ npx @skybluefeet/skills-kit add language python
 npx @skybluefeet/skills-kit add language java
 ```
 
+场景规范会按 `--project-type` 自动裁剪；前端项目保留 `FRONTEND_CODE-STYLE.md`，后端项目保留 `BACKEND_CODE-STYLE.md`。
+
 ### Step 3：按需添加 CLAUDE.md
 
 ```bash
@@ -50,9 +52,10 @@ npx @skybluefeet/skills-kit doctor
 - [ ] `developers/SKILLS/SKILL_CODE_QUALITY_CHECK.md` 存在
 - [ ] `developers/SESSIONS/TEMPLATE.md` 存在
 
-### 语言规范
+### 语言/场景规范
 
 - [ ] `developers/CODE-STYLES/` 下至少存在一份与项目语言匹配的规范文件
+- [ ] 前端或后端项目已启用对应场景规范（`FRONTEND_CODE-STYLE.md` / `BACKEND_CODE-STYLE.md`）
 - [ ] `developers/CODE-STYLE.md`（总则）存在
 - [ ] `skills.lock.json` 已记录正确的 `projectType`
 
@@ -69,8 +72,8 @@ npx @skybluefeet/skills-kit doctor
 
 | 判定 | 条件 |
 |---|---|
-| **通过** | 必需文件全部存在，语言规范至少一份匹配 |
-| **部分通过** | 必需文件存在，语言规范缺失或不匹配，有明确补充计划 |
+| **通过** | 必需文件全部存在，语言/场景规范至少一份匹配，前后端场景规范按项目类型启用 |
+| **部分通过** | 必需文件存在，语言/场景规范缺失或不匹配，有明确补充计划 |
 | **不通过** | 必需文件缺失，`doctor` 报错未修复 |
 
 ---
@@ -80,7 +83,7 @@ npx @skybluefeet/skills-kit doctor
 **Q：`doctor` 报"缺失必需文件"**  
 A：执行 `npx @skybluefeet/skills-kit doctor --fix` 自动补齐，或手动从模板复制。
 
-**Q：语言规范文件全部缺失**  
+**Q：语言/场景规范文件全部缺失**  
 A：执行 `add language <name>` 按需添加，支持：`typescript / javascript / java / python / rust / web`。
 
 **Q：TypeScript / JavaScript 通用项目应走哪份验收文档？**  

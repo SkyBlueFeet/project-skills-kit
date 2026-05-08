@@ -3,9 +3,10 @@ import path from "node:path";
 import { readFile, readdir } from "node:fs/promises";
 
 import {
-  ALL_STYLE_FILES,
+  LANGUAGE_STYLE_FILES,
   PROJECT_TYPES,
   PROJECT_TYPE_TO_ACCEPTANCE_SKILL,
+  PROJECT_TYPE_TO_STYLE_FILE,
   REQUIRED_FILES,
   TEMPLATE_BASE,
   getPackageVersion
@@ -48,6 +49,7 @@ export async function runDoctor(options) {
   const fixed = [];
   const lock = await readLock(targetDir);
   const governance = lock?.governance ?? governanceProfileDefaults("recommended");
+  const requiredStylePaths = getRequiredStylePaths(lock?.projectType);
 
   for (const requiredFile of REQUIRED_FILES) {
     const absolutePath = path.join(targetDir, requiredFile);
@@ -83,8 +85,13 @@ export async function runDoctor(options) {
     "developers/DOC-RULES.md"
   ]);
   for (const item of brokenLinks) {
-    if (item.includes("developers/INDEX.md -> ./CODE-STYLES/")) {
-      warnings.push(`可选语言规范未安装: ${item}`);
+    const stylePath = getBrokenCodeStylePath(item);
+    if (stylePath) {
+      if (requiredStylePaths.has(stylePath)) {
+        continue;
+      }
+
+      warnings.push(`可选语言/场景规范未安装: ${item}`);
       continue;
     }
     errors.push(`链接失效: ${item}`);
@@ -135,7 +142,7 @@ export async function runDoctor(options) {
   const stylesDir = path.join(targetDir, "developers", "CODE-STYLES");
   if (await pathExists(stylesDir)) {
     const styleEntries = await readdir(stylesDir);
-    const enabled = styleEntries.filter((entry) => ALL_STYLE_FILES.includes(entry));
+    const enabled = styleEntries.filter((entry) => LANGUAGE_STYLE_FILES.includes(entry));
     if (enabled.length === 0) {
       warnings.push("developers/CODE-STYLES 下没有启用任何语言规范文件。");
     }
@@ -225,6 +232,20 @@ export async function runDoctor(options) {
             await ensureAcceptanceSkillInstalled(targetDir, lock, requiredAcceptanceSkill);
             fixed.push(`已补齐项目类型对应验收技能: ${requiredAcceptanceSkill}`);
           }
+        }
+      }
+
+      for (const styleFile of toStyleFileList(PROJECT_TYPE_TO_STYLE_FILE[lock.projectType])) {
+        const relativePath = normalizeRelativePath(
+          path.join("developers", "CODE-STYLES", styleFile)
+        );
+        if (await pathExists(path.join(targetDir, relativePath))) {
+          continue;
+        }
+
+        warnings.push(`项目类型 ${lock.projectType} 缺少对应场景规范：${relativePath}。`);
+        if (options.fix && await restoreTemplateFileByGovernance(targetDir, relativePath, governance, false)) {
+          fixed.push(`已补齐项目类型对应场景规范: ${relativePath}`);
         }
       }
     }
@@ -332,6 +353,60 @@ async function restoreTemplateFileByGovernance(targetDir, relativePath, governan
 
   await copyFromTemplate(targetDir, normalizedPath, force);
   return true;
+}
+
+/**
+ * 将单个或多个规范文件名统一为数组。
+ *
+ * @param {string | string[] | undefined} mapped
+ * @returns {string[]}
+ */
+function toStyleFileList(mapped) {
+  if (!mapped) {
+    return [];
+  }
+
+  return Array.isArray(mapped) ? mapped : [mapped];
+}
+
+/**
+ * 返回当前项目类型必需的场景规范路径集合。
+ *
+ * 这些文件缺失时会由 projectType 专项检查给出更明确的诊断，避免同时被 Markdown
+ * 链接检查归类为“可选规范未安装”。
+ *
+ * @param {string | null | undefined} projectType
+ * @returns {Set<string>}
+ */
+function getRequiredStylePaths(projectType) {
+  return new Set(
+    toStyleFileList(PROJECT_TYPE_TO_STYLE_FILE[projectType]).map((styleFile) =>
+      normalizeRelativePath(path.join("developers", "CODE-STYLES", styleFile))
+    )
+  );
+}
+
+/**
+ * 从 Markdown 链接检查结果中提取 CODE-STYLES 目标路径。
+ *
+ * @param {string} brokenLink
+ * @returns {string | null}
+ */
+function getBrokenCodeStylePath(brokenLink) {
+  const separator = " -> ";
+  const separatorIndex = brokenLink.indexOf(separator);
+  if (separatorIndex === -1) {
+    return null;
+  }
+
+  const sourceFile = brokenLink.slice(0, separatorIndex);
+  const link = brokenLink.slice(separatorIndex + separator.length);
+  const sourceDir = path.dirname(sourceFile);
+  const normalizedPath = normalizeRelativePath(path.join(sourceDir, link));
+
+  return normalizedPath.startsWith("developers/CODE-STYLES/")
+    ? normalizedPath
+    : null;
 }
 
 /**

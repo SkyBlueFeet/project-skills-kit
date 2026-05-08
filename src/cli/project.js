@@ -5,32 +5,27 @@ import { readFile } from "node:fs/promises";
 import {
   ALL_STYLE_FILES,
   LANGUAGE_TO_STYLE_FILE,
+  PROJECT_TYPE_TO_STYLE_FILE,
   PROJECT_TYPES
 } from "./constants.js";
 import { pathExists, removeIfExists } from "./utils/fs.js";
 
 /**
- * 按语言裁剪 `developers/CODE-STYLES` 中的规范文件。
+ * 按语言与项目类型裁剪 `developers/CODE-STYLES` 中的规范文件。
  *
  * @param {string} targetRoot
  * @param {string[]} selectedLanguages
+ * @param {string | null} [projectType=null]
  * @returns {Promise<void>}
  */
-export async function applyLanguageSelection(targetRoot, selectedLanguages) {
+export async function applyLanguageSelection(targetRoot, selectedLanguages, projectType = null) {
   const stylesDir = path.join(targetRoot, "developers", "CODE-STYLES");
   const keep = new Set();
 
   for (const language of selectedLanguages) {
-    const mapped = LANGUAGE_TO_STYLE_FILE[language];
-    if (Array.isArray(mapped)) {
-      mapped.forEach((fileName) => keep.add(fileName));
-      continue;
-    }
-
-    if (mapped) {
-      keep.add(mapped);
-    }
+    addStyleFilesToSet(keep, LANGUAGE_TO_STYLE_FILE[language]);
   }
+  addStyleFilesToSet(keep, PROJECT_TYPE_TO_STYLE_FILE[projectType]);
 
   for (const fileName of ALL_STYLE_FILES) {
     const targetFile = path.join(stylesDir, fileName);
@@ -113,6 +108,26 @@ export function toStyleFiles(language) {
   }
 
   return Array.isArray(mapped) ? mapped : [mapped];
+}
+
+/**
+ * 将单个或多个规范文件名加入保留集合。
+ *
+ * `undefined` 代表当前语言或项目类型没有额外规范，不应报错。
+ *
+ * @param {Set<string>} target
+ * @param {string | string[] | undefined} mapped
+ * @returns {void}
+ */
+function addStyleFilesToSet(target, mapped) {
+  if (Array.isArray(mapped)) {
+    mapped.forEach((fileName) => target.add(fileName));
+    return;
+  }
+
+  if (mapped) {
+    target.add(mapped);
+  }
 }
 
 /**

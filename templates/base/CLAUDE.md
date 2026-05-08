@@ -11,7 +11,7 @@
 
 - 开发索引：`developers/INDEX.md`
 - 文档规则：`developers/DOC-RULES.md`
-- 代码规范：`developers/CODE-STYLE.md` + `developers/CODE-STYLES/*_CODE-STYLE.md`
+- 代码规范：`developers/CODE-STYLE.md` + `developers/CODE-STYLES/*_CODE-STYLE.md`（语言/场景）
 - 按需加载：`developers/AI-CONTEXT-LOADING.md`
 - 会话留痕：`developers/SESSIONS/`
 

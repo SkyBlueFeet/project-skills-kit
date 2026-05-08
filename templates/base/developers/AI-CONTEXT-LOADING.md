@@ -12,7 +12,7 @@
 
 | 任务类型 | 最小读取集 | 可选补充 |
 |---|---|---|
-| 代码修改 | `AGENTS.md` + `developers/CODE-STYLE.md` + `developers/CODE-STYLES/` 对应语言规范 | `developers/SKILLS/SKILL_CODE_QUALITY_CHECK.md` |
+| 代码修改 | `AGENTS.md` + `developers/CODE-STYLE.md` + `developers/CODE-STYLES/` 对应语言/场景规范 | `developers/SKILLS/SKILL_CODE_QUALITY_CHECK.md` |
 | 文档修改 | `AGENTS.md` + `developers/DOC-RULES.md` | `developers/INDEX.md` |
 | 计划状态更新 | `AGENTS.md` + `developers/INDEX.md` + `developers/DOC-RULES.md` | `developers/ANALYSIS/ANALYSIS_*.md` |
 | 历史追溯 | `AGENTS.md` + `developers/SESSIONS/NOTE_YY_MM_DD.md` | `developers/REPORTS/` 文件 |

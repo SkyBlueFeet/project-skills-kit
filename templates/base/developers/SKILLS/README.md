@@ -21,7 +21,7 @@
 | [SKILL_ROUTER.md](./SKILL_ROUTER.md) | **任务路由器（统一入口）** | 所有任务开始前 |
 | [SKILL_BOOTSTRAP.md](./SKILL_BOOTSTRAP.md) | 新项目初始化与最低可用检查 | init 后、迁移后、首次接入 |
 | [SKILL_DOC_GOVERNANCE.md](./SKILL_DOC_GOVERNANCE.md) | 文档治理（新建/修改/归档流程） | 任何文档变更时 |
-| [SKILL_CODE_GOVERNANCE.md](./SKILL_CODE_GOVERNANCE.md) | 代码治理（改动流程 + 语言规范路由） | 功能实现、修复、重构时 |
+| [SKILL_CODE_GOVERNANCE.md](./SKILL_CODE_GOVERNANCE.md) | 代码治理（改动流程 + 语言/场景规范路由） | 功能实现、修复、重构时 |
 | [SKILL_PLAN_INDEX.md](./SKILL_PLAN_INDEX.md) | 计划索引管理（生命周期操作） | 计划创建/更新/完成/撤销时 |
 | [SKILL_SNAPSHOT.md](./SKILL_SNAPSHOT.md) | 代码快照管理（Repomix） | 无上下文、快照失效、新建分析前 |
 | [SKILL_CODE_QUALITY_CHECK.md](./SKILL_CODE_QUALITY_CHECK.md) | 通用代码质量检查 | 功能完成验收、提交前自检、阶段巡检 |

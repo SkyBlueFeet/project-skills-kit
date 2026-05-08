@@ -20,7 +20,7 @@
 |---|---|
 | **所有任务（统一入口）** | [SKILLS/SKILL_ROUTER.md](./SKILLS/SKILL_ROUTER.md) |
 | 新项目初始化 | [SKILLS/SKILL_BOOTSTRAP.md](./SKILLS/SKILL_BOOTSTRAP.md) |
-| 代码编辑任务（强制遵守语言规范） | [CODE-STYLE.md](./CODE-STYLE.md) + [CODE-STYLES/](./CODE-STYLES/) 对应语言规范 |
+| 代码编辑任务（强制遵守语言/场景规范） | [CODE-STYLE.md](./CODE-STYLE.md) + [CODE-STYLES/](./CODE-STYLES/) 对应语言/场景规范 |
 | 文档维护 | [DOC-RULES.md](./DOC-RULES.md) |
 | 质量验收 | [SKILLS/SKILL_CODE_QUALITY_CHECK.md](./SKILLS/SKILL_CODE_QUALITY_CHECK.md) |
 | 快照管理 | [SKILLS/SKILL_SNAPSHOT.md](./SKILLS/SKILL_SNAPSHOT.md) |
@@ -43,7 +43,7 @@
 | [SKILLS/SKILL_ROUTER.md](./SKILLS/SKILL_ROUTER.md) | **任务路由器（统一入口）** | 所有任务开始前 |
 | [SKILLS/SKILL_BOOTSTRAP.md](./SKILLS/SKILL_BOOTSTRAP.md) | 新项目初始化与最低可用检查 | init 后、迁移后、首次接入 |
 | [SKILLS/SKILL_DOC_GOVERNANCE.md](./SKILLS/SKILL_DOC_GOVERNANCE.md) | 文档治理（新建/修改/归档流程） | 任何文档变更时 |
-| [SKILLS/SKILL_CODE_GOVERNANCE.md](./SKILLS/SKILL_CODE_GOVERNANCE.md) | 代码治理（改动流程 + 语言规范路由） | 功能实现、修复、重构时 |
+| [SKILLS/SKILL_CODE_GOVERNANCE.md](./SKILLS/SKILL_CODE_GOVERNANCE.md) | 代码治理（改动流程 + 语言/场景规范路由） | 功能实现、修复、重构时 |
 | [SKILLS/SKILL_PLAN_INDEX.md](./SKILLS/SKILL_PLAN_INDEX.md) | 计划索引管理（生命周期操作） | 计划创建/更新/完成/撤销时 |
 | [SKILLS/SKILL_SNAPSHOT.md](./SKILLS/SKILL_SNAPSHOT.md) | 代码快照管理（Repomix） | 无上下文、快照失效、新建分析前 |
 | [SKILLS/SKILL_CODE_INDEX.md](./SKILLS/SKILL_CODE_INDEX.md) | 代码索引建立与维护 | 项目初始化后、结构变更后、索引过期时 |
@@ -74,6 +74,8 @@
 | [CODE-STYLES/PYTHON_CODE-STYLE.md](./CODE-STYLES/PYTHON_CODE-STYLE.md) | Python 规范（按项目启用） |
 | [CODE-STYLES/HTML_CODE-STYLE.md](./CODE-STYLES/HTML_CODE-STYLE.md) | HTML 规范（按项目启用） |
 | [CODE-STYLES/CSS_CODE-STYLE.md](./CODE-STYLES/CSS_CODE-STYLE.md) | CSS 规范（按项目启用） |
+| [CODE-STYLES/FRONTEND_CODE-STYLE.md](./CODE-STYLES/FRONTEND_CODE-STYLE.md) | 前端应用规范（按项目类型启用） |
+| [CODE-STYLES/BACKEND_CODE-STYLE.md](./CODE-STYLES/BACKEND_CODE-STYLE.md) | 后端应用规范（按项目类型启用） |
 | [AI-CONTEXT-LOADING.md](./AI-CONTEXT-LOADING.md) | AI 按需加载与 token 节省策略 |
 
 ---

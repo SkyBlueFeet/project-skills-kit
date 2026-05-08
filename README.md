@@ -29,7 +29,7 @@
 - `AGENTS.md`：目标项目中的协作总入口，说明任务入口、通用原则和计划索引。
 - `CLAUDE.md`：Claude Code 的补充约束，强调协作边界和执行要求。
 - `developers/INDEX.md`：开发文档导航入口。
-- `developers/CODE-STYLE.md` 与 `developers/CODE-STYLES/*`：代码规范总则与语言细则。
+- `developers/CODE-STYLE.md` 与 `developers/CODE-STYLES/*`：代码规范总则、语言细则与前后端场景细则。
 - `developers/DOC-RULES.md`：文档新增、修改、索引维护规则。
 - `developers/SKILLS/*.md`：针对初始化、快照、质量检查、验收等任务的操作手册。
 - `developers/SESSIONS/`：会话留痕，记录每次任务的目的、改动、验证结果与后续事项。
@@ -60,7 +60,7 @@ CLI 模块拆分后，入口关系如下：
 常见使用方式：
 
 1. 在新项目中执行 `skills-kit init`，生成一套基础规则文档。
-2. 根据项目技术栈裁剪语言规范和技能文档。
+2. 根据项目技术栈与项目类型裁剪语言/场景规范和技能文档。
 3. 在后续演进中，通过 `add`、`migrate`、`sync`、`doctor` 维护规则结构一致性。
 
 常用命令：
@@ -118,7 +118,7 @@ npm run pack:check
 
 - `init`
   从 `templates/base/` 复制一套基础模板到目标项目，默认生成 `AGENTS.md`、`developers/INDEX.md`、`developers/CODE-STYLE.md`、`developers/DOC-RULES.md` 等基础文件。
-  可选生成 `CLAUDE.md`，可按语言裁剪 `developers/CODE-STYLES/*`，并在初始化时选择 `projectType`；CLI 基于 `package.json` 的项目类型猜测仅作为建议，不会替代人工选择。启用文档治理时会保留 `developers/SKILLS/`、`developers/SESSIONS/`、`developers/MODULE-BUSINESS-FILE-MAP.md`，并写入 `skills.lock.json`。
+  可选生成 `CLAUDE.md`，可按语言和 `projectType` 裁剪 `developers/CODE-STYLES/*`；前端项目保留 `FRONTEND_CODE-STYLE.md`，Node.js / Java 后端项目保留 `BACKEND_CODE-STYLE.md`，`mixed` 项目保留两者。CLI 基于 `package.json` 的项目类型猜测仅作为建议，不会替代人工选择。启用文档治理时会保留 `developers/SKILLS/`、`developers/SESSIONS/`、`developers/MODULE-BUSINESS-FILE-MAP.md`，并写入 `skills.lock.json`。
 
 - `add`
   按需从模板中补充单项内容。
@@ -130,11 +130,11 @@ npm run pack:check
 
 - `sync`
   用当前 `templates/base/` 对目标项目做模板同步。
-  会检查大多数模板文件是否缺失或与模板不一致，默认只报告差异；使用 `--apply --force` 时可覆盖冲突文件。`README.md` 不参与同步，缺失的语言规范文件也不会被自动补装。
+  会检查大多数模板文件是否缺失或与模板不一致，默认只报告差异；使用 `--apply --force` 时可覆盖冲突文件。`README.md` 不参与同步，缺失的语言/场景规范文件也不会被自动补装。
 
 - `doctor`
   对目标项目做结构诊断。
-  会检查必需文件、Markdown 本地链接、计划索引口径、`SKILL_ROUTER` 链路、`skills.lock.json` 一致性，以及 `developers/SESSIONS/TEMPLATE.md`、`developers/CODE-INDEX.md` 等关键配套文件；同时校验 `projectType` 与验收 skill 是否匹配。使用 `--fix` 时会尝试补齐部分缺失项，包括项目类型对应的验收 skill。
+  会检查必需文件、Markdown 本地链接、计划索引口径、`SKILL_ROUTER` 链路、`skills.lock.json` 一致性，以及 `developers/SESSIONS/TEMPLATE.md`、`developers/CODE-INDEX.md` 等关键配套文件；同时校验 `projectType` 与验收 skill、场景规范是否匹配。使用 `--fix` 时会尝试补齐部分缺失项，包括项目类型对应的验收 skill 和场景规范。
 
 ## 维护原则
 

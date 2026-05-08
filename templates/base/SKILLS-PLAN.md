@@ -1,4 +1,4 @@
-﻿# SKILLS-PLAN
+# SKILLS-PLAN
 
 ## 1. 目标与范围
 
@@ -50,7 +50,7 @@ developers/
     SKILL_ROUTER.md           ← 统一入口，含完成后必做规则
     SKILL_BOOTSTRAP.md        ← 新项目初始化与最低可用检查
     SKILL_DOC_GOVERNANCE.md   ← 文档更新流程 + 留痕
-    SKILL_CODE_GOVERNANCE.md  ← 代码改动流程 + 语言规范路由
+    SKILL_CODE_GOVERNANCE.md  ← 代码改动流程 + 语言/场景规范路由
     SKILL_PLAN_INDEX.md       ← 计划生命周期管理
     SKILL_CODE_QUALITY_CHECK.md
     SKILL_ACCEPTANCE.md
@@ -113,7 +113,7 @@ developers/
 任务：
 
 1. 新增 `SKILL_DOC_GOVERNANCE.md`：文档更新流程 + 留痕 + 版本锚点。
-2. 新增 `SKILL_CODE_GOVERNANCE.md`：代码改动流程 + 语言规范路由 + 质量门禁。
+2. 新增 `SKILL_CODE_GOVERNANCE.md`：代码改动流程 + 语言/场景规范路由 + 质量门禁。
 3. 新增 `SKILL_PLAN_INDEX.md`：计划创建 / 更新 / 完成 / 撤销的操作步骤，明确 `AGENTS.md` 为唯一权威源。
 
 交付物：三份治理 Skill 文档。
@@ -160,7 +160,7 @@ developers/
 
 ## 5. 优先级排序
 
-```
+```text
 Phase 1（触发机制）> Phase 2（治理文档）> Phase 4（CI 门禁）> Phase 3（CLI 增强）
 ```
 

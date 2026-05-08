@@ -5,7 +5,7 @@
 ## 1. 适用范围
 
 - 本文档定义跨语言通用约束。
-- 各语言细则见：
+- 各语言与应用场景细则见：
   - [RUST_CODE-STYLE.md](./CODE-STYLES/RUST_CODE-STYLE.md)
   - [TYPESCRIPT_CODE-STYLE.md](./CODE-STYLES/TYPESCRIPT_CODE-STYLE.md)
   - [JAVASCRIPT_CODE-STYLE.md](./CODE-STYLES/JAVASCRIPT_CODE-STYLE.md)
@@ -13,6 +13,8 @@
   - [PYTHON_CODE-STYLE.md](./CODE-STYLES/PYTHON_CODE-STYLE.md)
   - [HTML_CODE-STYLE.md](./CODE-STYLES/HTML_CODE-STYLE.md)
   - [CSS_CODE-STYLE.md](./CODE-STYLES/CSS_CODE-STYLE.md)
+  - [FRONTEND_CODE-STYLE.md](./CODE-STYLES/FRONTEND_CODE-STYLE.md)
+  - [BACKEND_CODE-STYLE.md](./CODE-STYLES/BACKEND_CODE-STYLE.md)
 
 ## 2. 通用设计要求（强制）
 
@@ -39,10 +41,10 @@
 - 涉及跨语言接口变更时，必须同步更新：
   - `README.md`
   - 相关示例
-  - 对应语言规范或分析文档
+  - 对应语言/场景规范或分析文档
 
 ## 5. 质量门禁（建议基线）
 
 - 每种语言至少执行：格式化、静态检查、单测（如适用）。
 - 对高风险变更（接口、并发、序列化协议）补充回归验证。
-- 具体命令以各语言规范文档为准。
+- 具体命令以各语言/场景规范文档为准。

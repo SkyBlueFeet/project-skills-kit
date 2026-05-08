@@ -10,7 +10,7 @@
 | 开发文档导航 | 提供开发文档总入口与按需读取路线 | `developers/INDEX.md` |
 | 文档治理规则 | 规范文档归档、计划同步、留痕要求 | `developers/DOC-RULES.md` |
 | 跨语言编码总则 | 统一设计、可维护性与质量门禁基线 | `developers/CODE-STYLE.md` |
-| 语言规范 | 按项目语言栈启用细则规范 | `developers/CODE-STYLES/*_CODE-STYLE.md` |
+| 语言/场景规范 | 按项目语言栈与前后端应用形态启用细则规范 | `developers/CODE-STYLES/*_CODE-STYLE.md` |
 | 上下文控制 | 约束最小读取集与 token 控制策略 | `developers/AI-CONTEXT-LOADING.md` |
 | 操作技能 | 固化快照、质量检查等可执行流程 | `developers/SKILLS/*.md` |
 | 计划分析 | 存放计划与方案分析结论 | `developers/ANALYSIS/*.md` |
@@ -22,5 +22,5 @@
 ## 快速定位规则
 
 1. 先按“业务目标”定位模块域，再打开“关键文件”。
-2. 涉及代码改动时，至少同时打开：`AGENTS.md`、`developers/INDEX.md`、对应语言规范。
+2. 涉及代码改动时，至少同时打开：`AGENTS.md`、`developers/INDEX.md`、对应语言/场景规范。
 3. 涉及文档或计划状态改动时，优先打开：`developers/DOC-RULES.md` 与当天 `developers/SESSIONS/NOTE_YY_MM_DD.md`。

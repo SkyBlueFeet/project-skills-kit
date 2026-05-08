@@ -32,7 +32,7 @@
 | 浏览开发文档目录 | `developers/INDEX.md` |
 | 新项目初始化 | `developers/SKILLS/SKILL_BOOTSTRAP.md` |
 | 控制上下文读取与 token 成本 | `developers/AI-CONTEXT-LOADING.md` |
-| 代码编辑任务（强制遵守语言规范） | `developers/CODE-STYLE.md` + `developers/CODE-STYLES/` 对应语言规范 |
+| 代码编辑任务（强制遵守语言/场景规范） | `developers/CODE-STYLE.md` + `developers/CODE-STYLES/` 对应语言/场景规范 |
 | 新建或修改文档 | `developers/DOC-RULES.md` |
 | 功能修改后做质量验收 | `developers/SKILLS/SKILL_CODE_QUALITY_CHECK.md` |
 | 判定计划目标是否完成（收束验收） | `developers/SKILLS/SKILL_ACCEPTANCE.md` → 按技术栈路由到对应专项文档 |
@@ -49,7 +49,7 @@
 - `developers/INDEX.md`
 - `developers/DOC-RULES.md`
 - `developers/CODE-STYLE.md`
-- 对应语言规范：`developers/CODE-STYLES/*_CODE-STYLE.md`
+- 对应语言/场景规范：`developers/CODE-STYLES/*_CODE-STYLE.md`
 - `developers/AI-CONTEXT-LOADING.md`
 - `developers/SKILLS/*.md`
 
@@ -67,7 +67,7 @@
 - **留痕必做**：每次任务结束后追加 `developers/SESSIONS/NOTE_YY_MM_DD.md`（文件不存在时从 TEMPLATE.md 复制）。
 - **计划单源**：计划索引仅在本文件（`AGENTS.md`）维护，创建/更新/完成/撤销时同步更新此处。
 - **兼容优先**：对外接口变更必须版本化或提供兼容迁移路径。
-- **注释有约束**：修改代码时同步检查 `developers/CODE-STYLE.md` 与对应语言细则中的注释/JSDoc 要求；导出函数、共享常量、配置映射、关键数据结构如存在边界或隐含约束，不得省略必要文档注释。
+- **注释有约束**：修改代码时同步检查 `developers/CODE-STYLE.md` 与对应语言/场景细则中的注释/JSDoc 要求；导出函数、共享常量、配置映射、关键数据结构如存在边界或隐含约束，不得省略必要文档注释。
 
 ---
 

@@ -20,6 +20,7 @@
 - 主要语言（TypeScript / Java / Python / …）
 - 是否使用 AI 辅助开发（Claude Code / Cursor / 其他）
 - 是否需要文档治理（会话留痕、分析报告、质量检查）
+- 文档治理希望多重：严格、平衡、轻量，还是关闭
 
 ---
 
@@ -32,7 +33,7 @@
 | `developers/INDEX.md` | 开发文档导航索引 | 强烈推荐 |
 | `developers/DOC-RULES.md` | 文档维护规则 | 推荐 |
 | `developers/CODE-STYLE.md` | 代码规范总则 | 推荐 |
-| `developers/CODE-STYLES/<语言>_CODE-STYLE.md` | 对应语言的代码细则 | 按需选取 |
+| `developers/CODE-STYLES/*_CODE-STYLE.md` | 对应语言或应用场景的代码细则 | 按需选取 |
 | `developers/AI-CONTEXT-LOADING.md` | AI 按需加载策略 | 推荐 |
 | `developers/SKILLS/SKILL_SNAPSHOT.md` | 代码快照操作手册 | 按需 |
 | `developers/SKILLS/SKILL_CODE_QUALITY_CHECK.md` | 质量检查操作手册 | 按需 |
@@ -49,7 +50,7 @@
 1. **`AGENTS.md`**：更新"计划索引"初始行，删除"待登记"占位符，按实际项目首个计划填入或留空说明。
 2. **`CLAUDE.md`**：如有项目专属约束（如禁止修改某目录），在此追加。
 3. **`developers/INDEX.md`**：清空示例条目，按实际模块与文档结构重建索引。
-4. **语言规范**：只保留项目实际使用的语言规范文件，删除无关语言文件，避免 Agent 误读。
+4. **语言/场景规范**：只保留项目实际使用的语言规范文件，以及与项目类型匹配的前端/后端场景规范，删除无关文件，避免 Agent 误读。
 
 ---
 
@@ -80,20 +81,22 @@ CLAUDE.md           ← 任务入口与约束
 
 ---
 
-## 3. 语言规范按需使用说明
+## 3. 语言/场景规范按需使用说明
 
-`developers/CODE-STYLES/` 下提供多语言规范，彼此**独立**，不与项目绑定。
+`developers/CODE-STYLES/` 下提供语言规范与应用场景规范，彼此**独立**，按项目语言栈和应用形态组合使用。
 使用方式：
 
 - 在目标项目的 `AGENTS.md` 或 `developers/CODE-STYLE.md` 中声明"当前项目启用语言"。
-- Agent 执行代码任务时，仅读取已声明语言对应的规范文件。
+- 前端项目追加启用 `FRONTEND_CODE-STYLE.md`，后端项目追加启用 `BACKEND_CODE-STYLE.md`。
+- Agent 执行代码任务时，仅读取已声明语言和场景对应的规范文件。
 
 示例声明（在目标项目 `developers/CODE-STYLE.md` 顶部）：
 
 ```
-## 当前项目启用语言规范
+## 当前项目启用语言/场景规范
 - TypeScript：developers/CODE-STYLES/TYPESCRIPT_CODE-STYLE.md
 - Python：developers/CODE-STYLES/PYTHON_CODE-STYLE.md
+- 前端应用：developers/CODE-STYLES/FRONTEND_CODE-STYLE.md
 ```
 
 ---
@@ -155,6 +158,7 @@ $ npx @skybluefeet/skills-kit init
   ◯ 前端（React / Vue / 原生 Web 等）
   ◯ Node.js 后端（Express / Koa / Fastify / NestJS 等）
 ? 是否启用文档治理（会话留痕 / 分析报告 / 质量检查）? Yes
+? 文档治理重量档位: balanced
 
 ✔ 生成 AGENTS.md
 ✔ 生成 CLAUDE.md
@@ -162,6 +166,7 @@ $ npx @skybluefeet/skills-kit init
 ✔ 生成 developers/CODE-STYLE.md
 ✔ 生成 developers/CODE-STYLES/TYPESCRIPT_CODE-STYLE.md
 ✔ 生成 developers/CODE-STYLES/PYTHON_CODE-STYLE.md
+✔ 生成 developers/CODE-STYLES/FRONTEND_CODE-STYLE.md（按 projectType）
 ✔ 生成 developers/DOC-RULES.md
 ✔ 生成 developers/AI-CONTEXT-LOADING.md
 ✔ 生成 developers/SESSIONS/TEMPLATE.md
@@ -172,6 +177,15 @@ $ npx @skybluefeet/skills-kit init
   2. 打开 developers/MODULE-BUSINESS-FILE-MAP.md，按实际模块填写
   3. 开始第一次会话留痕：developers/SESSIONS/NOTE_YY_MM_DD.md
 ```
+
+治理档位说明：
+
+- `strict`：保持模板默认重量。
+- `balanced`：保留主流程，把部分收尾动作降级为建议。
+- `minimal`：只保留核心入口，默认不强制留痕和质量检查。
+- `off`：不启用治理配套目录。
+
+如果某个治理项被设为 `off`，CLI 会把对应内容直接从目标项目文档中裁掉，避免 Agent 在后续对话里反复强调已经关闭的规则。
 
 ### 4.5 核心逻辑（`src/cli/main.js` + `src/cli/commands/*.js`）
 

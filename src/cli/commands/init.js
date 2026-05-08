@@ -174,7 +174,7 @@ export async function runInit(options) {
     );
   }
 
-  await applyLanguageSelection(targetDir, selectedLanguages);
+  await applyLanguageSelection(targetDir, selectedLanguages, projectType);
 
   const lock = makeLock(
     getPackageVersion(),

@@ -76,11 +76,11 @@
 - `CLAUDE.md`、`developers/INDEX.md` 等文件不重复维护计划表格，只写“见 `AGENTS.md` 计划索引”。
 - 操作步骤见 [`developers/SKILLS/SKILL_PLAN_INDEX.md`](./SKILLS/SKILL_PLAN_INDEX.md)。
 
-### 3.8 多语言规范维护（强制）
+### 3.8 多语言/场景规范维护（强制）
 
 - 总则：`developers/CODE-STYLE.md`。
-- 语言细则：`developers/CODE-STYLES/*_CODE-STYLE.md`。
-- 发生语言级规则变更时，必须同步更新对应细则。
+- 语言/场景细则：`developers/CODE-STYLES/*_CODE-STYLE.md`。
+- 发生语言级或前后端场景级规则变更时，必须同步更新对应细则。
 
 ### 3.9 CHANGELOG 维护规范（强制）
 

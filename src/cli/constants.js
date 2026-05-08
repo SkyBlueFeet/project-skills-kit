@@ -76,7 +76,7 @@ export const GOVERNANCE_PROFILES = ["recommended", "strict", "balanced", "minima
  *
  * @type {string[]}
  */
-export const ALL_STYLE_FILES = [
+export const LANGUAGE_STYLE_FILES = [
   "TYPESCRIPT_CODE-STYLE.md",
   "JAVASCRIPT_CODE-STYLE.md",
   "JAVA_CODE-STYLE.md",
@@ -84,6 +84,30 @@ export const ALL_STYLE_FILES = [
   "RUST_CODE-STYLE.md",
   "HTML_CODE-STYLE.md",
   "CSS_CODE-STYLE.md"
+];
+
+/**
+ * 所有可被裁剪或补装的应用场景规范文件名。
+ *
+ * `init` 会按项目类型保留前端或后端场景规范，避免非相关项目带入额外规则。
+ *
+ * @type {string[]}
+ */
+export const SCENARIO_STYLE_FILES = [
+  "FRONTEND_CODE-STYLE.md",
+  "BACKEND_CODE-STYLE.md"
+];
+
+/**
+ * 所有可被裁剪或补装的代码规范文件名。
+ *
+ * 包含语言规范和应用场景规范。
+ *
+ * @type {string[]}
+ */
+export const ALL_STYLE_FILES = [
+  ...LANGUAGE_STYLE_FILES,
+  ...SCENARIO_STYLE_FILES
 ];
 
 /**
@@ -208,6 +232,20 @@ export const PROJECT_TYPE_TO_ACCEPTANCE_SKILL = {
   "javascript-general": "developers/SKILLS/SKILL_ACCEPTANCE_JAVASCRIPT.md",
   "backend-java": "developers/SKILLS/SKILL_ACCEPTANCE_JAVA_BACKEND.md",
   python: "developers/SKILLS/SKILL_ACCEPTANCE_PYTHON.md"
+};
+
+/**
+ * 项目类型到对应应用场景规范文件的映射。
+ *
+ * 语言规范回答“这门语言怎么写”，场景规范回答“这个应用形态怎么组织代码”。
+ *
+ * @type {Record<string, string | string[]>}
+ */
+export const PROJECT_TYPE_TO_STYLE_FILE = {
+  frontend: "FRONTEND_CODE-STYLE.md",
+  "backend-node": "BACKEND_CODE-STYLE.md",
+  "backend-java": "BACKEND_CODE-STYLE.md",
+  mixed: ["FRONTEND_CODE-STYLE.md", "BACKEND_CODE-STYLE.md"]
 };
 
 /**
